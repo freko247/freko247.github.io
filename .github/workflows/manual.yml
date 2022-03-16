@@ -47,8 +47,8 @@ jobs:
           ref: ${{ github.head_ref }}
       - name: Create/update todays blog
         run: |
-          now=$(date +"%m_%d_%Y")
-          echo "$POST_URL" >> blog_${now}.html
+          now=$(date +"%Y_%m_%d")
+          echo "$POST_URL" >> "blog_${now}.html"
         env:
           POST_URL: ${{ github.event.inputs.postUrl }}
           POST_COMMENT: ${{ github.event.inputs.postComment }}
@@ -58,7 +58,7 @@ jobs:
           ls
           # Delete and Generate index.html
           rm index.html
-          now=$(date +"%m_%d_%Y")
+          now=$(date +"%Y_%m_%d")
           cp "blog_${now}.html" index.html
       - name: Commit report
         run: |
