@@ -45,7 +45,9 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - name: Create report file
-        run: echo "$POST_URL" > index.html
+        run: |
+          now=$(date +"%m_%d_%Y")
+          echo "$POST_URL" >> blog_${now}.html
         env:
           POST_URL: ${{ github.event.inputs.postUrl }}
           POST_COMMENT: ${{ github.event.inputs.postComment }}
