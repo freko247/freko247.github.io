@@ -59,7 +59,7 @@ jobs:
           # Delete and Generate index.html
           rm index.html
           now=$(date +"%m_%d_%Y")
-          cp index.html "blog_${now}.html"
+          cp "blog_${now}.html" index.html
       - name: Commit report
         run: |
           git config --global user.name 'freko247'
