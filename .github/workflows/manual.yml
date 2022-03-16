@@ -17,8 +17,15 @@ on:
       environment:
         description: 'Environment to run tests against'
         type: environment
-        required: true 
-
+        required: true
+      postUrl:
+        description: 'Link to article'
+        required: true
+        type: string
+      postComment:
+        description: 'Comment on article'
+        required: false
+        type: string
 jobs:
   log-the-inputs:
     runs-on: ubuntu-latest
@@ -31,3 +38,21 @@ jobs:
           LEVEL: ${{ github.event.inputs.logLevel }}
           TAGS: ${{ github.event.inputs.tags }}
           ENVIRONMENT: ${{ github.event.inputs.environment }}
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Create report file
+        run: echo "$POST_URL" > index.html
+        env:
+          POST_URL: ${{ github.event.inputs.postUrl }}
+          POST_COMMENT: ${{ github.event.inputs.postComment }}
+      - name: Commit report
+        run: |
+          git config --global user.name 'freko247'
+          git config --global user.email 'freko247@gmail.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git commit -am "Automated publish"
+          git push
