@@ -56,5 +56,7 @@ jobs:
           git config --global user.name 'freko247'
           git config --global user.email 'freko247@gmail.com'
           git remote set-url origin https://x-access-token:${{ secrets.MY_GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          now=$(date +"%m_%d_%Y")
+          git add "blog_${now}.html"
           git commit -am "Automated publish"
           git push
