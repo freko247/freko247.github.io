@@ -41,22 +41,31 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
-      - name: Create report file
+      - name: Create/update todays blog
         run: |
           now=$(date +"%m_%d_%Y")
           echo "$POST_URL" >> blog_${now}.html
         env:
           POST_URL: ${{ github.event.inputs.postUrl }}
           POST_COMMENT: ${{ github.event.inputs.postComment }}
+      - name: Rebuild index page
+        run: |
+          # Generate list of files\
+          ls
+          # Delete and Generate index.html
+          rm index.html
+          now=$(date +"%m_%d_%Y")
+          cp index.html "blog_${now}.html"
       - name: Commit report
         run: |
           git config --global user.name 'freko247'
           git config --global user.email 'freko247@gmail.com'
           git remote set-url origin https://x-access-token:${{ secrets.MY_GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          now=$(date +"%m_%d_%Y")
+          now=$(date +"%Y_%m_%d")
           git add "blog_${now}.html"
           git commit -am "Automated publish"
           git push
